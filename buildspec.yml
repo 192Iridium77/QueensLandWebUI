@@ -9,7 +9,7 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=171112320276.dkr.ecr.ap-southeast-2.amazonaws.com/samuseum_webui
+      - REPOSITORY_URI=441254910419.dkr.ecr.ap-southeast-2.amazonaws.com/queensland-ui-container
       - COMMIT_HASH=$(date +%s)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
@@ -27,10 +27,10 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions files...
       - mkdir definitions
-      - printf '[{"name":"staging_webui","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > definitions/release.json
+      - printf '[{"name":"queensland-ui-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > definitions/release.json
       - cat definitions/release.json
 artifacts:
   files:
     - '**/*'
-  name: APIDeployment.zip
+  name: UIDeployment.zip
   base-directory: definitions
