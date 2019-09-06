@@ -1,7 +1,7 @@
 {
-  "name": "samuseum",
+  "name": "queensland",
   "version": "1.0.0",
-  "description": "SA Museum Website",
+  "description": "Queensland Webapp for Govhack 2019",
   "author": "Matt Martin",
   "private": true,
   "scripts": {
