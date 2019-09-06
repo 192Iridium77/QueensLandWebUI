@@ -1,6 +1,6 @@
-# samuseum
+# QUEENSLAND
 
-> SA Museum Website
+> Govhack 2019 project
 
 ## Build Setup
 
