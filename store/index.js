@@ -12,7 +12,7 @@ const storeDef = {
   }
 };
 // storeDef.actions = loadModules(require.context('./actions', true, /\.js$/));
-storeDef.mutations = loadModules(require.context("./mutations", true, /\.js$/));
+// storeDef.mutations = loadModules(require.context("./mutations", true, /\.js$/));
 
 const store = new Vuex.Store(storeDef);
 

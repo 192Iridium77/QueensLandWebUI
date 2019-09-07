@@ -1,4 +1,4 @@
-export default function({$axios, redirect, $warehouse}) {
+export default function({ $axios, redirect, $warehouse }) {
   $axios.onRequest(config => {
     if (process.browser) {
       // const _token = $warehouse.get('token');
@@ -8,12 +8,14 @@ export default function({$axios, redirect, $warehouse}) {
   });
 
   $axios.onResponse(result => {
+    console.log('RESULT', result)
     if (result.data.errors && result.data.errors.length) {
       const firstError = result.data.errors[0];
       const code = parseInt(firstError && firstError.status);
       if (code === 401) redirect("/login");
       if (code >= 400) throw firstError;
     }
+    return result
   });
 
   $axios.onError(error => {
