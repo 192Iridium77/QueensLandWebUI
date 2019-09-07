@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="content">
   <explore></explore>
 </div>
 </template>
@@ -14,3 +14,10 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.content {
+    background-color: #ECEFF1;
+    height: 300vh;
+}
+</style>

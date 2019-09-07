@@ -447,7 +447,8 @@ export default {
       { postcode: "4895", district: "Cooktown" },
       { postcode: "9726", district: "Gold Coast" },
     ],
-    crashes: undefined
+    crashes: undefined,
+    crashesCount: undefined
   },
   actions: {
     ...load(require.context("./actions", false, /\.js$/))

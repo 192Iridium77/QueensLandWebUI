@@ -1,40 +1,81 @@
 <template lang="html">
-  <div>
-    <v-container class="content">
+  <div color="#ECEFF1">
+    <v-container>
       <!-- <div v-for="suburb in suburbs">
         {{suburb.postcode}} {{suburb.district}}
       </div> -->
-      <div v-if="suburb">
-        <h1>{{suburb.district}}</h1>
-        Crashes
+      <div v-if="suburb" class="content">
+        <v-app-bar
+          color="#01579B"
+          dark >
+          <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+          <v-toolbar-title>{{suburb.district}}</v-toolbar-title>
+
+          <div class="flex-grow-1"></div>
+
+          <!-- <v-btn icon>
+            <v-icon>mdi-heart</v-icon>
+          </v-btn>
+
+          <v-btn icon>
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn> -->
+
+          <v-menu left bottom >
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+
+            <!-- <v-list>
+              <v-list-item
+                v-for="n in 5"
+                :key="n"
+                @click="() => {}"
+              >
+                <v-list-item-title>Option {{ n }}</v-list-item-title>
+              </v-list-item>
+            </v-list> -->
+          </v-menu>
+        </v-app-bar>
+        <!-- <h1></h1>
+        Crashes({) -->
         <no-ssr>
-          <carousel :per-page="3" :navigate-to="someLocalProperty" :mouse-drag="true">
+          <carousel :per-page="5" :navigate-to="someLocalProperty" :mouse-drag="true" :paginationEnabled="false" class="carousel">
             <slide v-for="crash in crashes" :key="crash.id">
-
-              <v-card color="#385F73" dark class="crash-card">
-                <v-list-item three-line>
-                   <v-list-item-content class="align-self-start">
-                     <v-list-item-title class="headline mb-2" >
-                     {{crash.Crash_Year}}
-                     {{crash.Crash_Month}}
-                     {{crash.Crash_Day_Of_Week}}
-                   </v-list-item-title>
-
-                     <v-list-item-subtitle v-text="crash.Crash_Nature"></v-list-item-subtitle>
-                   </v-list-item-content>
-
-                   <v-list-item-avatar size="125" tile >
-                     <v-img :src="getImage(crash.Crash_Nature)"></v-img>
-                   </v-list-item-avatar>
-                 </v-list-item>
-
-                <!-- <v-card-actions>
-                  <v-btn text>Listen Now</v-btn>
-                </v-card-actions> -->
+              <v-card darken-4 dark class="crash-card mx-auto" max-width="375" color="#0277BD">
+                <v-img height="300" v-if="getCrashType(crash.Crash_Nature) === 'parked'" src="/images/parkedcarcrash.jpg"/>
+                <v-img height="300" v-if="getCrashType(crash.Crash_Nature) === 'pedestrian'" src="/images/pedestriancarcrash.jpg"/>
+                <v-img height="300" v-if="getCrashType(crash.Crash_Nature) === 'rear'" src="/images/rearendcollision.jpg"/>
+                <v-card-title>
+                  <div>
+                    {{crash.Crash_Year}}
+                    {{crash.Crash_Month}}
+                    {{crash.Crash_Day_Of_Week}}
+                  </div>
+                </v-card-title>
+                <div class="grey--text subtitle-1">
+                  Nature of Incident: {{crash.Crash_Nature}}
+                </div>
+                <div class="grey--text subtitle-1">
+                  Description: {{crash.Crash_DCA_Group_Description}}
+                </div>
+                <div class="grey--text subtitle-1">
+                  Severity: {{crash.Crash_Severity}}
+                </div>
+                <v-card-actions>
+                  <v-btn text>Comment</v-btn>
+                </v-card-actions>
               </v-card>
             </slide>
           </carousel>
         </no-ssr>
+        <div class="statistics">
+          Last Year's Crash Total: <span class="count">{{crashesCount}}</span>
+        </div>
+        <chart v-if="crashes" :data="crashes"></chart>
       </div>
       <template>
         <v-row justify="center">
@@ -42,7 +83,7 @@
             <!-- <template v-slot:activator="{ on }">
               <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
             </template> -->
-            <v-card class="dialog-card">
+            <v-card class="dialog-card" color="white">
               <v-card-title class="headline">Select a location</v-card-title>
 
               <v-autocomplete
@@ -62,7 +103,7 @@
 
               <v-card-actions>
                 <div class="flex-grow-1"></div>
-                <v-btn color="green darken-1" text @click="submitSuburb">Ok</v-btn>
+                <v-btn color="darken-1" text @click="submitSuburb">Ok</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -75,7 +116,8 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { Carousel, Slide } from 'vue-carousel';
-import { includes } from 'lodash';
+import { includes, toLower } from 'lodash';
+import Chart from "./Chart";
 
 export default {
   name: "Explore",
@@ -92,7 +134,8 @@ export default {
   },
   components: {
     Carousel,
-    Slide
+    Slide,
+    Chart
   },
   mounted() {
     // return this.loadSuburbs();
@@ -115,24 +158,44 @@ export default {
       this.dialog = false;
       return this.loadCrimes(this.suburb.postcode);
     },
-    getImage(nature) {
-      if (includes(nature, "parked")) {
-        return "~/assets/images/parkedcarcrash";
+    getCrashType(nature) {
+      if (includes(toLower(nature), "parked")) {
+        return "parked";
       }
+      if (includes(toLower(nature), "pedestrian")) {
+        return "pedestrian";
+      }
+      if (includes(toLower(nature), "rear")) {
+        return "rear";
+      }
+      return "parked";
     }
   },
   computed: {
-    ...mapState("explore", ["suburbs", "crashes"]),
+    ...mapState("explore", ["suburbs", "crashes", "crashesCount"]),
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.carousel {
+    margin-top: 24px;
+}
+.statistics {
+    padding-top: 24px;
+    .count {
+        color: #1565C0;
+    }
+}
+
 .dialog-card {
     padding: 24px;
 }
 .crash-card {
     margin: 24px;
+    .subtitle-1 {
+        padding: 4px 16px;
+    }
 }
 .explore {
     display: flex;
