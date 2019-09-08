@@ -7,6 +7,7 @@
       <div v-if="suburb" class="content">
         <v-app-bar
           color="#01579B"
+          class="app-bar"
           dark >
           <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
@@ -14,13 +15,13 @@
 
           <div class="flex-grow-1"></div>
 
-          <!-- <v-btn icon>
+          <v-btn icon>
             <v-icon>mdi-heart</v-icon>
           </v-btn>
 
           <v-btn icon>
             <v-icon>mdi-magnify</v-icon>
-          </v-btn> -->
+          </v-btn>
 
           <v-menu left bottom >
             <template v-slot:activator="{ on }">
@@ -84,6 +85,7 @@
               <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
             </template> -->
             <v-card class="dialog-card" color="white">
+              <v-img src="/images/EMERGENCE_thumbnail.png" class="logo"></v-img>
               <v-card-title class="headline">Select a location</v-card-title>
 
               <v-autocomplete
@@ -203,5 +205,10 @@ export default {
     .content {
         flex: 1;
     }
+}
+
+.app-bar {
+    display: flex;
+    justify-content: space-between;
 }
 </style>
